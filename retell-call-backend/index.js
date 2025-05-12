@@ -1,42 +1,46 @@
-import { RetellWebClient } from "https://cdn.jsdelivr.net/npm/retell-client-js-sdk/+esm";
+import { RetellWebClient } from "retell-client-js-sdk";
 
-let client;
+let client = null;
+
+const log = (message) => {
+  const logBox = document.getElementById("log");
+  logBox.textContent += message + "\n";
+  logBox.scrollTop = logBox.scrollHeight;
+};
 
 window.startCall = async () => {
-  const token = document.getElementById("token").value;
+  const token = document.getElementById("token").value.trim();
+
   if (!token) {
-    log("❗ Please provide a valid access token.");
+    log("⚠️ Please enter a valid access token.");
     return;
   }
 
-  client = new RetellWebClient();
-
   try {
-    await client.startCall({ accessToken: token });
-    log("✅ Call started.");
+    log("🔄 Starting call...");
+    client = new RetellWebClient();
 
-    client.on("call_started", () => log("📞 Call started"));
-    client.on("call_ended", () => log("📴 Call ended"));
-    client.on("update", (data) => log("🗣 Transcript: " + data.transcript));
-    client.on("agent_start_talking", () => log("🤖 Agent is talking..."));
-    client.on("agent_stop_talking", () => log("🛑 Agent stopped talking."));
+    client.on("call_started", () => log("✅ Call started"));
+    client.on("call_ended", () => log("📞 Call ended"));
+    client.on("agent_start_talking", () => log("🗣️ Agent started talking"));
+    client.on("agent_stop_talking", () => log("🤐 Agent stopped talking"));
+    client.on("update", (update) => log("📝 Update: " + JSON.stringify(update)));
     client.on("error", (err) => log("❌ Error: " + err.message));
-  } catch (err) {
-    log("🚫 Failed to start call: " + err.message);
+
+    await client.startCall({
+      accessToken: token,
+      sampleRate: 24000,
+      emitRawAudioSamples: false,
+    });
+  } catch (e) {
+    log("❌ Error starting call: " + e.message);
   }
 };
 
 window.stopCall = () => {
   if (client) {
     client.stopCall();
-    log("⛔ Call manually stopped.");
-  } else {
-    log("⚠️ No call in progress.");
+    log("🛑 Call stopped");
+    client = null;
   }
 };
-
-function log(message) {
-  const el = document.getElementById("log");
-  el.textContent += message + "\n";
-  el.scrollTop = el.scrollHeight;
-}
