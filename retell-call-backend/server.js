@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.json());
-app.use(express.static(__dirname)); // Serve static files (like index.html)
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/api/start-call', async (req, res) => {
   try {
