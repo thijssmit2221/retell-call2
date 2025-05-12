@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Retell Web Call</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 2rem;
+        background: #f7f7f7;
+      }
+      input, button {
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Retell Web Call</h1>
+    <label for="token">Access Token:</label><br />
+    <input id="token" type="text" style="width: 100%;" placeholder="Paste your access token here" />
+    <br />
+    <button onclick="startCall()">Start Call</button>
+    <button onclick="stopCall()">Stop Call</button>
+    <pre id="log" style="margin-top:2rem; background:#fff; padding:1rem;"></pre>
+
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
